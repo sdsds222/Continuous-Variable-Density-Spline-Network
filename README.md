@@ -12,6 +12,11 @@ This route abandons fixed sampling coordinates and instead incorporates an auxil
 Completely discards traditional activation functions. Because the sampling coordinates for each feature extraction are dynamically determined by the current input data, this mechanism of using input data to alter the computational path inherently possesses strong non-linear processing capabilities. Therefore, this architecture can completely remove traditional non-linear activation functions, relying directly on the dynamic changes of coordinate positions to complete complex feature extraction.
 Requires signal maintenance and initialization protection mechanisms. Without activation functions, the weighted average characteristic of the B-spline interpolation algorithm will cause the feature signals to gradually weaken or even be flattened during deep network transmission. Therefore, basic linear normalization operations must be introduced between layers to re-stretch the variance of the signal and maintain signal strength. Furthermore, to prevent generating extremely incorrect sampling coordinates at the very beginning of training which would cause the model to crash directly, the internal auxiliary layer must execute strict zero initialization. This ensures that the network first performs absolutely uniform sampling in the early stages of training, and then gradually learns dynamic position adjustments based on gradients.
 
+Extension:
+
+
+Saving the curve generated for the current word and using it directly as the starting point for the next word—instead of redrawing the curve from scratch—allows the network to retain memory of previously read content without recalculating the overall shape every time, ensuring smooth and continuous transitions between consecutive text inputs.
+
 
 # 连续变密度样条神经网络架构概述
 连续变密度样条神经网络是一种将传统的离散矩阵计算转化为连续函数处理的新型架构。它的核心机制是利用非均匀B样条技术，将输入特征拟合成一条连续且平滑的曲线。接着，网络通过计算一组可训练的间距权重W，生成一系列具体的坐标点，并在连续曲线上对应的位置提取数据。
@@ -29,3 +34,8 @@ Requires signal maintenance and initialization protection mechanisms. Without ac
 这种路线放弃了固定的采样坐标，转而在网络层内部加入一个辅助的小型全连接层。该辅助层会读取每一轮的输入特征，并根据当前数据的实际分布，实时计算出该样本专属的间距权重W，从而实现对特征分布位置的实时追踪。
 完全舍弃传统激活函数。 因为每一次提取特征的采样坐标都由当前的输入数据动态决定，这种用输入数据去改变计算路径的机制本身就具备极强的非线性处理能力。因此，该架构可以完全去除传统的非线性激活函数，直接依靠坐标位置的动态变化来完成复杂特征的提取。
 需要引入信号维持与初始化保护机制。 在没有激活函数的情况下，B样条插值算法的加权平均特性会导致特征信号在深层网络传递中逐渐减弱甚至被抹平。因此，必须在层间引入基础的线性归一化操作来重新拉伸信号的方差，维持信号强度。此外，为了防止训练刚开始时生成极端错误的采样坐标导致模型直接崩溃，内部的辅助层必须执行严格的零初始化，确保网络在训练初期先进行绝对均匀的采样，随后再基于梯度逐步学习动态位置调整。
+
+扩展：
+
+把当前这个词算出来的曲线直接存下来，等读下一个词的时候，不重新开始画曲线，而是直接在上一次的那条曲线上做局部修改。这样做的用处是让网络能记住之前读过的内容，不用每次都从头计算整体形状，从而在连续读取文本时，能让前后内容平滑连贯地衔接起来。
+
