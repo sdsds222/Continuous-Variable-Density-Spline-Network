@@ -11,7 +11,9 @@ Possesses extremely high computational efficiency and stability. Fixed sampling 
 This route abandons fixed sampling coordinates and instead incorporates an auxiliary small fully connected layer within the network layer. This auxiliary layer reads the input features of each round and calculates the exclusive spacing weights W for that sample in real-time based on the actual distribution of the current data, thereby achieving real-time tracking of feature distribution positions.
 Completely discards traditional activation functions. Because the sampling coordinates for each feature extraction are dynamically determined by the current input data, this mechanism of using input data to alter the computational path inherently possesses strong non-linear processing capabilities. Therefore, this architecture can completely remove traditional non-linear activation functions, relying directly on the dynamic changes of coordinate positions to complete complex feature extraction.
 Requires signal maintenance and initialization protection mechanisms. Without activation functions, the weighted average characteristic of the B-spline interpolation algorithm will cause the feature signals to gradually weaken or even be flattened during deep network transmission. Therefore, basic linear normalization operations must be introduced between layers to re-stretch the variance of the signal and maintain signal strength. Furthermore, to prevent generating extremely incorrect sampling coordinates at the very beginning of training which would cause the model to crash directly, the internal auxiliary layer must execute strict zero initialization. This ensures that the network first performs absolutely uniform sampling in the early stages of training, and then gradually learns dynamic position adjustments based on gradients.
-连续变密度样条神经网络架构概述
+
+
+# 连续变密度样条神经网络架构概述
 连续变密度样条神经网络是一种将传统的离散矩阵计算转化为连续函数处理的新型架构。它的核心机制是利用非均匀B样条技术，将输入特征拟合成一条连续且平滑的曲线。接着，网络通过计算一组可训练的间距权重W，生成一系列具体的坐标点，并在连续曲线上对应的位置提取数据。
 这种设计的核心优势在于，网络可以自由决定在哪些区域密集提取特征，在哪些区域稀疏提取特征，并且整个处理过程不受输入数据固定维度的限制。
 根据间距权重W的生成方式，该架构分为以下两种实现路线：
